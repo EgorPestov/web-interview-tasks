@@ -50,3 +50,8 @@ export type Connections = {
 export type SuperheroImage = {
   url: string;
 };
+
+export type SearchSuperheroResult = {
+  'results-for': string;
+  results: Superhero[];
+};

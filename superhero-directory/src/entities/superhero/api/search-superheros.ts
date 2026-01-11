@@ -1,27 +1,28 @@
-/*
+// Shared
 import { config } from '~shared/config';
-import { ResponseError, ResponseSuccess } from '~shared/response';
+// Types
+import { SearchSuperheroResult } from '../types';
+import { ApiResponse } from '~shared/types';
 
-import { useQuery } from '@tanstack/react-query';
+export async function searchSuperheros(
+  name: string
+): Promise<SearchSuperheroResult> {
+  const res = await fetch(
+    `${config.apiHost}/api/${config.apiToken}/search/${encodeURIComponent(name)}`
+  );
 
-import { superheroKeys } from './keys';
+  if (!res.ok) {
+    throw new Error(`Error ${res.status}: ${res.statusText}`);
+  }
 
-import { Superhero } from '../superhero';
+  const data: ApiResponse<SearchSuperheroResult> = await res.json();
 
-type ResponsePayload = {
-  'results-for': string;
-  results: Superhero[];
-};
+  // т.к. бэк всегда отвечает 200, проверки на ok не хватит, поэтому проверяем response, но лучше это починить на бэке
+  if (data.response === 'error') {
+    throw new Error(data.error || 'API error');
+  }
 
-export type Params = {
-  query: string;
-};
-
-export function useSearchSuperheros(params: Params) {
-  const { query } = params;
-
-  // Method documentation: https://superheroapi.com/#name
-  // Example call: GET https://superheroapi.com/api/${access-token}/search/${superhero-name}
-  return useQuery({});
+  return data;
 }
- */
+
+export const SEARCH_SUPERHEROS_KEY = 'searchSuperheros';

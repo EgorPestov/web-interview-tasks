@@ -1,0 +1,2 @@
+export const USER_INPUT_CHANGE_DELAY = 400;
+export const DEBOUNCED_SEARCH_MIN_LENGTH = 3;

@@ -1,8 +1,4 @@
-import { useSuperhero } from './api/get-superhero';
-
-// import { useSearchSuperheros } from './api/search-superheros';
-
-export const superheroApi = {
-  useSuperhero,
-  // useSearchSuperheros,
-};
+// Api
+export { getSuperhero, GET_SUPERHERO_KEY } from './api/get-superhero';
+// Hooks
+export { useGetSuperhero } from './hooks/use-get-superhero';

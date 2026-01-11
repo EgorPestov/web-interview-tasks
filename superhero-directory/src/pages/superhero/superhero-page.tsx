@@ -1,6 +1,7 @@
+// Modules
 import { useParams } from 'react-router-dom';
-
-import { superheroApi } from '~entities/superhero';
+// Hooks
+import { useGetSuperhero } from '~entities/superhero';
 
 export function SuperheroPage() {
   const { id } = useParams();
@@ -8,7 +9,7 @@ export function SuperheroPage() {
     data: superhero,
     isLoading,
     error,
-  } = superheroApi.useSuperhero({ id });
+  } = useGetSuperhero({ id });
 
   if (isLoading) {
     return <p className="text-center text-gray-500">Loading...</p>;

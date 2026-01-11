@@ -1,44 +1,18 @@
+// Shared
 import { config } from '~shared/config';
-import { ResponseError, ResponseSuccess } from '~shared/response';
+// Types
+import { Superhero } from '../types';
 
-import { skipToken, useQuery } from '@tanstack/react-query';
+export async function getSuperhero(id: string): Promise<Superhero> {
+  const res = await fetch(`${config.apiHost}/api/${config.apiToken}/${id}`);
 
-import { superheroKeys } from './keys';
+  if (!res.ok) {
+    const error = await res.json(); // слабое место если сервак вернет не json, а какой-нить html от nginx
+    // для безопасности я бы тут попробовал try catch или явную проверку распарсенного error
+    throw new Error(`Error ${res.status}: ${res.statusText} - ${error.error}`);
+  }
 
-import { Superhero } from '../superhero';
-
-export type Params = {
-  id?: string;
-};
-
-export function useSuperhero(params: Params) {
-  const { id } = params;
-
-  return useQuery({
-    queryKey: superheroKeys.superhero(id ?? ''),
-    queryFn: id
-      ? async () => {
-          const response: ResponseSuccess<Superhero> = await fetch(
-            `${config.apiHost}/api/${config.apiToken}/${id}`,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }
-          ).then(async (res) => {
-            if (!res.ok) {
-              const error: ResponseError = await res.json();
-
-              throw new Error(
-                `Error ${res.status}: ${res.statusText} - ${error.error}`
-              );
-            }
-
-            return res.json();
-          });
-
-          return response;
-        }
-      : skipToken,
-  });
+  return res.json();
 }
+
+export const GET_SUPERHERO_KEY = 'getSuperhero';
